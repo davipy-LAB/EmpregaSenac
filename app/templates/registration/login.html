@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EmpregaSenac</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2>Login</h2>
+                    </div>
+                    <div class="card-body">
+                        {% if form.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                Seu nome de usuário e senha não corresponderam. Por favor, tente novamente.
+                            </div>
+                        {% endif %}
+
+                        {% if next %}
+                            {% if user.is_authenticated %}
+                                <div class="alert alert-warning" role="alert">
+                                    Sua conta não tem acesso a esta página. Para prosseguir,
+                                    por favor faça login com uma conta que tenha acesso.
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info" role="alert">
+                                    Por favor, faça login para ver esta página.
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="{{ form.username.id_for_label }}">Usuário:</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.password.id_for_label }}">Senha:</label>
+                                {{ form.password }}
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                            <input type="hidden" name="next" value="{{ next }}">
+                        </form>
+                        <hr>
+                        <p class="text-center">Ainda não tem uma conta? <a href="{% url 'cadastro_empresa' %}">Cadastre-se</a></p>
+                        <p class="text-center"><a href="{% url 'password_reset' %}">Esqueceu sua senha?</a></p>
+                        ...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
