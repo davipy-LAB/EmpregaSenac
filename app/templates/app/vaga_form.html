@@ -1,21 +1,40 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if form.instance.pk %}Editar Vaga{% else %}Criar Nova Vaga{% endif %} - EmpregaSenac</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1>{% if form.instance.pk %}Editar Vaga{% else %}Criar Nova Vaga{% endif %}</h1>
-        <form method="post">
-            {% csrf_token %} {{ form.as_p }} <button type="submit" class="btn btn-success">Salvar Vaga</button>
-            <a href="{% url 'vaga_list' %}" class="btn btn-secondary">Cancelar</a>
-        </form>
+{% extends 'app/base.html' %}
+
+{% block title %}
+    {% if vaga %}Editar Vaga{% else %}Publicar Nova Vaga{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header text-center">
+            <h2>{% if vaga %}Editar Vaga{% else %}Publicar Nova Vaga{% endif %}</h2>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger mt-3">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn btn-primary btn-block">Salvar Vaga</button>
+            </form>
+            <hr>
+            <p class="text-center">
+                <a href="{% url 'vaga_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+            </p>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+{% endblock content %}

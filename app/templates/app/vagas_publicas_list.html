@@ -1,77 +1,66 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vagas de Emprego - EmpregaSenac</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Vagas de Emprego</h1>
+{% extends 'app/base.html' %}
 
-        <form method="GET" class="form-row align-items-end mb-4">
-            <div class="col-md-3 mb-2">
-                <label for="nivel_filter">Nível:</label>
-                <select name="nivel" id="nivel_filter" class="form-control">
-                    <option value="">Todos</option>
-                    {% for key, value in niveis %}
-                        <option value="{{ key }}" {% if key == selected_nivel %}selected{% endif %}>{{ value }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-3 mb-2">
-                <label for="localidade_filter">Localidade:</label>
-                <input type="text" name="localidade" id="localidade_filter" class="form-control" value="{{ selected_localidade }}">
-            </div>
-            <div class="col-md-3 mb-2">
-                <label for="ordenar_por_filter">Ordenar por:</label>
-                <select name="ordenar_por" id="ordenar_por_filter" class="form-control">
-                    <option value="-data_publicacao" {% if selected_ordenar_por == "-data_publicacao" %}selected{% endif %}>Mais Recentes</option>
-                    <option value="salario_asc" {% if selected_ordenar_por == "salario_asc" %}selected{% endif %}>Salário (Menor)</option>
-                    <option value="salario_desc" {% if selected_ordenar_por == "salario_desc" %}selected{% endif %}>Salário (Maior)</option>
-                    <option value="titulo_asc" {% if selected_ordenar_por == "titulo_asc" %}selected{% endif %}>Título (A-Z)</option>
-                    <option value="titulo_desc" {% if selected_ordenar_por == "titulo_desc" %}selected{% endif %}>Título (Z-A)</option>
-                </select>
-            </div>
-            <div class="col-md-3 mb-2">
-                <button type="submit" class="btn btn-info btn-block">Aplicar Filtros</button>
-                <a href="{% url 'vagas_publicas' %}" class="btn btn-outline-secondary btn-block mt-1">Limpar Filtros</a>
-            </div>
-        </form>
+{% block title %}Vagas de Emprego{% endblock %}
 
-        {% if vagas_publicas %}
-            <div class="row">
-                {% for vaga in vagas_publicas %}
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ vaga.titulo }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ vaga.empresa.nome_fantasia }}</h6>
-                                <p class="card-text"><strong>Nível:</strong> {{ vaga.get_nivel_display }}</p>
-                                <p class="card-text"><strong>Localidade:</strong> {{ vaga.localidade }}</p>
-                                {% if vaga.salario %}
-                                    <p class="card-text"><strong>Salário:</strong> R$ {{ vaga.salario|floatformat:2 }}</p>
-                                {% else %}
-                                    <p class="card-text"><strong>Salário:</strong> Não informado</p>
-                                {% endif %}
-                                <p class="card-text">{{ vaga.descricao|truncatechars:200 }}</p>
-                                <p class="card-text"><small class="text-muted">Publicada em: {{ vaga.data_publicacao|date:"d/m/Y H:i" }}</small></p>
-                                <a href="{% url 'candidatar_vaga' pk=vaga.pk %}" class="btn btn-primary">Candidatar-se</a>
-                                </div>
+{% block content %}
+    <h1 class="mb-4">Vagas de Emprego</h1>
+
+    <form method="GET" class="form-row align-items-end mb-4">
+        <div class="col-md-3 mb-2">
+            <label for="nivel_filter">Nível:</label>
+            <select name="nivel" id="nivel_filter" class="form-control">
+                <option value="">Todos</option>
+                {% for key, value in niveis %}
+                    <option value="{{ key }}" {% if key == selected_nivel %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 mb-2">
+            <label for="localidade_filter">Localidade:</label>
+            <input type="text" name="localidade" id="localidade_filter" class="form-control" value="{{ selected_localidade }}">
+        </div>
+        <div class="col-md-3 mb-2">
+            <label for="ordenar_por_filter">Ordenar por:</label>
+            <select name="ordenar_por" id="ordenar_por_filter" class="form-control">
+                <option value="-data_publicacao" {% if selected_ordenar_por == "-data_publicacao" %}selected{% endif %}>Mais Recentes</option>
+                <option value="salario_asc" {% if selected_ordenar_por == "salario_asc" %}selected{% endif %}>Salário (Menor)</option>
+                <option value="salario_desc" {% if selected_ordenar_por == "salario_desc" %}selected{% endif %}>Salário (Maior)</option>
+                <option value="titulo_asc" {% if selected_ordenar_por == "titulo_asc" %}selected{% endif %}>Título (A-Z)</option>
+                <option value="titulo_desc" {% if selected_ordenar_por == "titulo_desc" %}selected{% endif %}>Título (Z-A)</option>
+            </select>
+        </div>
+        <div class="col-md-3 mb-2">
+            <button type="submit" class="btn btn-info btn-block">Aplicar Filtros</button>
+            <a href="{% url 'vagas_publicas' %}" class="btn btn-outline-secondary btn-block mt-1">Limpar Filtros</a>
+        </div>
+    </form>
+
+    {% if vagas_publicas %}
+        <div class="row">
+            {% for vaga in vagas_publicas %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ vaga.titulo }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ vaga.empresa.nome_fantasia }}</h6>
+                            <p class="card-text"><strong>Nível:</strong> {{ vaga.get_nivel_display }}</p>
+                            <p class="card-text"><strong>Localidade:</strong> {{ vaga.localidade }}</p>
+                            {% if vaga.salario %}
+                                <p class="card-text"><strong>Salário:</strong> R$ {{ vaga.salario|floatformat:2 }}</p>
+                            {% else %}
+                                <p class="card-text"><strong>Salário:</strong> Não informado</p>
+                            {% endif %}
+                            <p class="card-text">{{ vaga.descricao|truncatechars:200 }}</p>
+                            <p class="card-text"><small class="text-muted">Publicada em: {{ vaga.data_publicacao|date:"d/m/Y H:i" }}</small></p>
+                            <a href="{% url 'candidatar_vaga' pk=vaga.pk %}" class="btn btn-primary">Ver Detalhes e Candidatar</a>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="alert alert-info" role="alert">
-                Nenhuma vaga encontrada com os filtros selecionados.
-            </div>
-        {% endif %}
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Nenhuma vaga encontrada com os filtros selecionados.
+        </div>
+    {% endif %}
+{% endblock content %}
