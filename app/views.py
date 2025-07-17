@@ -177,41 +177,16 @@ class VagaPublicaListView(ListView):
 # ----------------------------------------------------
 
 class CandidaturaCreateView(CreateView):
-    model = Candidatura #
-    form_class = CandidaturaForm #
-    template_name = 'app/candidatura_form.html' # Vamos criar este template
-    # success_url será definido no form_valid para redirecionar para a vaga,
-    # ou para uma página de confirmação.
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        # Passa a instância da vaga para o formulário, se necessário para alguma validação
-        # ou apenas para ter certeza de que o formulário está ciente da vaga
-        # self.vaga é definido em get_context_data ou get_object
-        if hasattr(self, 'vaga'):
-            kwargs['initial'] = {'vaga': self.vaga}
-        return kwargs
-
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Obter a vaga a partir da URL (pk)
-        vaga_pk = self.kwargs.get('pk')
-        self.vaga = get_object_or_404(Vaga, pk=vaga_pk, ativa=True) # Apenas vagas ativas
-        context['vaga'] = self.vaga
-        context['title'] = f"Candidatar-se para: {self.vaga.titulo}"
-        return context
+    model = Candidatura
+    form_class = CandidaturaForm
+    template_name = 'app/candidatura_form.html'
 
     def form_valid(self, form):
-        # A vaga foi obtida em get_context_data
-        form.instance.vaga = self.vaga
+        vaga_pk = self.kwargs.get('pk')
+        vaga = get_object_or_404(Vaga, pk=vaga_pk, ativa=True)
+        form.instance.vaga = vaga
         messages.success(self.request, "Sua candidatura foi enviada com sucesso!")
         return super().form_valid(form)
 
     def get_success_url(self):
-        # Redireciona de volta para a página de detalhes da vaga ou para a lista de vagas públicas
-        # por enquanto, redireciona para a lista de vagas públicas.
         return reverse_lazy('vagas_publicas')
-        # Alternativamente, para uma página de detalhes da vaga (se você criar uma):
-        # return reverse_lazy('vaga_detalhe_publico', kwargs={'pk': self.v.pk})
-# ----------------------------------------------------

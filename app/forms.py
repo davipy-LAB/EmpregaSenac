@@ -68,3 +68,11 @@ class EmpresaSignUpForm(UserCreationForm):
         if len(cnpj_numerico) != 14: # CNPJ tem 14 dígitos numéricos
              raise forms.ValidationError("CNPJ inválido. Deve conter 14 dígitos numéricos.")
         return cnpj_numerico
+    
+from django import forms
+from .models import Candidatura
+
+class CandidaturaForm(forms.ModelForm):
+    class Meta:
+        model = Candidatura
+        fields = '__all__'  # Ou especifique os campos desejados

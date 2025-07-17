@@ -57,7 +57,7 @@
                                 {% endif %}
                                 <p class="card-text">{{ vaga.descricao|truncatechars:200 }}</p>
                                 <p class="card-text"><small class="text-muted">Publicada em: {{ vaga.data_publicacao|date:"d/m/Y H:i" }}</small></p>
-                                <a href="#" class="btn btn-primary">Ver Detalhes e Candidatar</a>
+                                <a href="{% url 'candidatar_vaga' pk=vaga.pk %}" class="btn btn-primary">Candidatar-se</a>
                                 </div>
                         </div>
                     </div>
