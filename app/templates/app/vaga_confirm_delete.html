@@ -1,0 +1,21 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Confirmar Exclusão{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header text-center bg-danger text-white">
+            <h2>Confirmar Exclusão de Vaga</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">Você tem certeza que deseja excluir a vaga "{{ object.titulo }}"?</p>
+            <p class="text-muted">Esta ação não poderá ser desfeita.</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-block">Sim, Excluir</button>
+                <a href="{% url 'vaga_list' %}" class="btn btn-outline-secondary btn-block mt-2">Não, Voltar para a Lista</a>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

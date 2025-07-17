@@ -1,0 +1,44 @@
+{% extends 'app/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header text-center">
+            <h2>{{ title }}</h2>
+            {% if vaga %}
+                <h5 class="card-subtitle text-muted">{{ vaga.titulo }} - {{ vaga.empresa.nome_fantasia }}</h5>
+                <p class="card-text"><small>Localidade: {{ vaga.localidade }} | Nível: {{ vaga.get_nivel_display }}</small></p>
+                <hr>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger mt-3">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn btn-success btn-block">Enviar Candidatura</button>
+            </form>
+            <hr>
+            <p class="text-center">
+                <a href="{% url 'vagas_publicas' %}" class="btn btn-outline-secondary">Voltar para a lista de vagas</a>
+            </p>
+        </div>
+    </div>
+{% endblock content %}
